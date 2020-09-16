@@ -134,7 +134,7 @@ public:
             fc::microseconds( deadline - fc::time_point::now() );
       auto ptrx = std::make_shared<packed_transaction>( trx, c );
       auto fut = transaction_metadata::start_recover_keys( ptrx, control->get_thread_pool(), control->get_chain_id(), time_limit );
-      auto r = control->push_transaction( fut.get(), deadline, billed_cpu_time_us );
+      auto r = control->push_transaction( fut.get(), deadline, billed_cpu_time_us, false );
       if (no_throw) return r;
       if( r->except_ptr ) std::rethrow_exception( r->except_ptr );
       if( r->except)  throw *r->except;
@@ -351,7 +351,7 @@ BOOST_FIXTURE_TEST_CASE( transaction_tests, eosio_evm_tester ) try {
          testName = testName.substr(0, extIdx);
 
          // Get the json
-         auto json = fc::json::from_file(testPath, fc::json::relaxed_parser);
+         auto json = fc::json::from_file(testPath, fc::json::parse_type::relaxed_parser);
 
          // Find out if it is valid
          auto fork_res = json.get_object()[testName][FORK].get_object();
@@ -505,7 +505,7 @@ BOOST_FIXTURE_TEST_CASE( general_state_tests, eosio_evm_tester ) try {
          }
 
          // Get the json
-         auto json = fc::json::from_file(testPath, fc::json::relaxed_parser);
+         auto json = fc::json::from_file(testPath, fc::json::parse_type::relaxed_parser);
 
          // For every test in the file
          for (const auto& singleTest: json.get_object()) {

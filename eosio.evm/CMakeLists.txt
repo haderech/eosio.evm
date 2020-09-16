@@ -32,11 +32,13 @@ target_include_directories(eosio.evm
 
 target_compile_definitions(eosio.evm PRIVATE -D_LIBCPP_STRSTREAM -DBOOST_EXCEPTION_DISABLE=1 -D_GLIBCXX_SSTREAM=1 -D_LIBCPP_SSTREAM -DBOOST_NO_IOSTREAM -DBOOST_NO_STRINGSTREAM )
 
-target_link_options(eosio.evm PUBLIC -stack-size 32000 -use-freeing-malloc)
+# Require cmake 3.13 or later to use target_link_options
+#target_link_options(eosio.evm PUBLIC -stack-size 32000 -use-freeing-malloc)
 
 set_target_properties(eosio.evm
    PROPERTIES
    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+   LINK_FLAGS "-stack-size 32000 -use-freeing-malloc"
 )
 
-target_compile_options( eosio.evm PUBLIC -R${CMAKE_CURRENT_SOURCE_DIR}/ricardian -R${CMAKE_CURRENT_BINARY_DIR}/ricardian)
+target_compile_options(eosio.evm PUBLIC -R${CMAKE_CURRENT_SOURCE_DIR}/ricardian -R${CMAKE_CURRENT_BINARY_DIR}/ricardian)
